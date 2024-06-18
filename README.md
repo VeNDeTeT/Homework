@@ -8,4 +8,5 @@
 
 1. Клонируйте репозиторий:
 ```
-git clone https://github.com/Azmullaevrs/first_bank.git
+git@github.com:VeNDeTeT/Homework.git
+```
