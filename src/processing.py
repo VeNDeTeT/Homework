@@ -5,13 +5,6 @@ from typing import Iterable
 
 
 
-def filter_by_state(list_of_data: Iterable[list[dict[str, str | int]]], condiyion: str="EXECUTED") -> Iterable[list[dict[str, str | int]]]:
-    """Фильтрует транзакции по состоянию EXECUTED """
-    filtered_list_EXECUTED = []
-    for data in list_of_data:
-        if data.get("state") == condiyion:
-            filtered_list_EXECUTED.append(data)
-    return filtered_list_EXECUTED
 
 
 
