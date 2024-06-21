@@ -26,3 +26,7 @@ def get_mask_account(bank_aсcount: str) -> str:
 
 
 print(get_mask_account("73654108430135874305"))
+
+
+def card_number():
+    return None

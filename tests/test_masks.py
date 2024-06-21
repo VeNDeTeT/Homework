@@ -1,24 +1,28 @@
 import pytest
-from src.masks import get_mask_card_number
+
+from src.masks import get_mask_account,get_mask_card_number
 
 
-@pytest.fixture
-def card_number_1():
-    return "7000792289606361"
+@pytest.mark.parametrize(
+    "card_number, expected",
+    [
+        ("7000792289606361", "7000 79** **** 6361"),
+        ("7000123412345678", "7000 12** **** 5678"),
+        ("1999432189600989", "1999 43** **** 0989"),
+    ],
+)
+def test_get_mask_card_number(card_number, expected):
+    assert get_mask_card_number(card_number) == expected
 
-@pytest.fixture
-def card_number_2():
-    return "7000123412345678"
 
-@pytest.fixture
-def card_number_3():
-    return "199943218960010"
+def test_card_number_1(card_number_1):
+    assert get_mask_card_number(card_number_1) == "7000 79** **** 6361"
 
-@pytest.fixture
-def bank_aсcount_1():
-    return "73654103330135224305"
 
-@pytest.fixture
-def bank_aсcount_1():
-    return "73654103330135224305"
+def test_card_number_2(card_number_2):
+    assert get_mask_card_number(card_number_2) == "7000 12** **** 5678"
 
+
+
+def test_card_number_3(card_number_3):
+    assert get_mask_card_number(card_number_3) == "1999 43** **** 0989"
