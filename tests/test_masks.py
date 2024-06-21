@@ -17,3 +17,8 @@ def card_number_3():
 @pytest.fixture
 def bank_aсcount_1()
     return "73654103330135224305"
+
+@pytest.fixture
+def bank_aсcount_1()
+    return "73654103330135224305"
+
