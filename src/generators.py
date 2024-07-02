@@ -8,3 +8,9 @@ def filter_by_currency(transactions: list[Dict], currency: str = "USD") -> Gener
             yield transaction
 
 
+def transaction_descriptions(
+    transactions: list[Dict],
+) -> Generator[Dict[str, object], None, None]:
+    """Возвращает описание каждой операции по очереди"""
+    for transaction in transactions:
+        yield transaction["description"]
