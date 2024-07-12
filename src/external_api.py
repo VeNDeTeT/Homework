@@ -1,32 +1,44 @@
-import json
 import os
-from typing import Any
-
 import requests
 from dotenv import load_dotenv
 
 load_dotenv()
 
-api_key = os.getenv("API_KEY")
+
+def return_amount_trans(transactions: dict) -> float:
+    """
+    Функция, которая принимает на вход транзакцию и возвращает сумму транзакции (amount) в рублях
+    """
+    amount = transactions["operationAmount"]["amount"]
+    currency = transactions["operationAmount"]['currency']['code']
+    if currency == 'RUB':
+        return float(amount)
+    else:
+        url = f"https://api.apilayer.com/exchangerates_data/convert?to=RUB&from={currency}&amount={amount}"
+        API_KEY = os.getenv('API_KEY')
+        headers = {
+            "apikey": f'{API_KEY}'
+        }
+
+        response = requests.get(url, headers=headers)
+        # status_code = response.status_code
+        # print(f"Статус код: {status_code}")
+        data = response.json()
+        return float(data['result'])
 
 
-def convert_from_usd_to_rub(amount:float) -> Any:
-    """Функция принимает значение в долларах, обращается к API и возвращает конвертацию в рубли"""
-    url = f"https://api.apilayer.com/exchangerates_data/convert?to=RUB&from=USD&amount={amount}"
-    headers = {"apikey": api_key}
-    response = requests.request("GET", url, headers=headers)
-    json_result = response.text
-    rub_amount = json.loads(json_result)["result"]
-
-    return rub_amount
-
-
-def convert_from_eur_to_rub(amount: float) -> Any:
-    """Функция принимает значение в евро, обращается к API и возвращает конвертацию в рубли"""
-    url = f"https://api.apilayer.com/exchangerates_data/convert?to=RUB&from=EUR&amount={amount}"
-    headers = {"apikey": api_key}
-    response = requests.request("GET", url, headers=headers)
-    json_result = response.text
-    rub_amount = json.loads(json_result)["result"]
-
-    return rub_amount
+if __name__ == '__main__':
+    r = (return_amount_trans(
+        {
+            "id": 41428829,
+            "state": "EXECUTED",
+            "date": "2019-07-03T18:35:29.512364",
+            "operationAmount": {
+                "amount": "8221.37",
+                "currency": {
+                    "name": "USD",
+                    "code": "USD"
+                }
+            }
+        },))
+    print(r)
