@@ -13,10 +13,14 @@ def get_info(file_json: str) -> Any:
         try:
             trans = json.load(f)
             return trans
+        except FileNotFoundError:
+            ...
+        except json.JSONDecodeError:
+            ...
+            return []
 
-        except [FileNotFoundError, json.JSONDecodeError]:
-            raise []
-            # return []
+
+if __name__ == "__main__":
+    get_info = "..\\date\\operations.json"
 
 
-print(get_info(r"C:\Users\Admin\qwer\learn\sasha\Homework\Bank\date\operations.json"))
