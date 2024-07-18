@@ -2,6 +2,7 @@ import pytest
 
 from src.widget import mask_card_and_account
 
+
 @pytest.mark.parametrize(
     "acc_number, expected",
     [

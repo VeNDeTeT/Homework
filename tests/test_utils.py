@@ -1,7 +1,4 @@
-import json
 from unittest.mock import Mock
-
-from src.utils import get_info
 
 
 def test_get_info():
