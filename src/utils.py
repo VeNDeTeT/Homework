@@ -13,11 +13,9 @@ def get_info(file_json: str) -> Any:
             trans = json.load(f)
             return trans
         except FileNotFoundError:
-            ...
+            return []
         except json.JSONDecodeError:
-            ...
             return []
 
 
-if __name__ == "__main__":
-    get_info = "..\\date\\operations.json"
+
