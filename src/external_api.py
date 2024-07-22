@@ -2,7 +2,7 @@ import os
 import requests
 from dotenv import load_dotenv
 
-load_dotenv('.env')
+load_dotenv('.env.example')
 
 
 def return_amount_trans(transactions: dict) -> float:
