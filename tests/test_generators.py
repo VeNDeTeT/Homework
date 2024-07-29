@@ -1,12 +1,7 @@
 import pytest
 
-
-from src.generators import (
-    filter_by_currency,
-    transaction_descriptions,
-    card_number_generator,
-)
 from src.gener_data import transactions
+from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
 
 
 @pytest.mark.parametrize(
