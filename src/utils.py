@@ -41,9 +41,3 @@ def get_info(file_json: str) -> Any:
             return []
 
 
-print(
-    json.dumps(
-        get_transactions_info_json(abs_src_file_path),
-        indent=4,
-    )
-)
