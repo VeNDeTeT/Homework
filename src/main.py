@@ -8,7 +8,7 @@ from src.masks import get_mask_account, get_mask_card_number
 from src.processing import filter_by_state, filter_by_date
 from src.utils import get_transactions_dictionary, get_transactions_dictionary_csv, get_transactions_dictionary_excel
 
-from src.filter_word import str_sort
+from src.filter_word import str_sort, count_operations_by_category
 
 
 PATH_TO_FILE_JSON = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "operations.json")
@@ -80,6 +80,8 @@ def main():
     #         if re.search(word, operation.get("description", "")):
     #             found_operations.append(operation)
     #             filtered_transactions = filter_by_rub(filtered_transactions, word)
+    resoulot = count_operations_by_category(filtered_transactions,["Перевод с карты на карту"])
+    print(resoulot)
 
     print("Распечатываю итоговый список транзакций...")
     if len(filtered_transactions) == 0:

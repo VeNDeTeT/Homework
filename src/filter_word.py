@@ -8,8 +8,7 @@ def str_sort(filtered_transactions: list[dict], word: str) -> list[dict]:
     for operation in filtered_transactions:
         if re.search(word, operation.get("description", "")):
             found_operations.append(operation)
-            filtered_transactions = found_operations
-        return filtered_transactions
+    return found_operations
 
 
 # def filter_transactions(transactions_list: list[dict], search_string: str) -> list[dict]:
