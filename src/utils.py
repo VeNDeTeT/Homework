@@ -1,43 +1,105 @@
 import json
 import logging
-import os
 from typing import Any
+import csv
 
-# Получаем абсолютный путь до текущей директории
-current_dir = os.path.dirname(os.path.abspath(__file__))
+import pandas as pd
 
-# Создаем путь до файла логов относительно текущей директории
-rel_log_file_path = os.path.join(current_dir, "../logs/utils.log")
-abs_log_file_path = os.path.abspath(rel_log_file_path)
-
-# Создаем путь до файла JSON относительно текущей директории
-rel_src_file_path = os.path.join(current_dir, "../data/operations.json")
-abs_src_file_path = os.path.abspath(rel_src_file_path)
-
-# Добавляем логгер, который записывает логи в файл.
-logger = logging.getLogger("utils")
-logger.setLevel(logging.INFO)
-file_handler = logging.FileHandler(abs_log_file_path, "w", encoding="utf-8")
-file_formatter = logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s: %(message)s"
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s: %(filename)s: %(levelname)s: %(message)s",
+    filename="../logs/utils.log",
+    # filename="utils.log",
+    filemode="w",
 )
-file_handler.setFormatter(file_formatter)
-logger.addHandler(file_handler)
+auth_logger = logging.getLogger("app.auth")
+# logger = logging.getLogger(__name__)
+# file_handler = logging.FileHandler('utils.log')
+# logger.addHandler(file_handler)
+# logger.setLevel(logging.INFO)
 
 
-def get_info(file_json: str) -> Any:
-    """
-    Функция, которая принимает на вход путь до JSON-файла
-    и возвращает список словарей с данными о финансовых транзакциях.
-    """
+def get_transactions_dictionary(path: str) -> dict | Any:
+    """Принимает путь до JSON-файла и возвращает список словарей с данными о финансовых транзакциях."""
+    try:
+        # with open(path, "r", "operations.json", encoding='utf-8') as operations:
+        with open(path, "r", encoding="utf-8") as operations:
 
-    with open(file_json, encoding="utf-8") as f:
-        try:
-            trans = json.load(f)
-            return trans
-        except FileNotFoundError:
-            return []
-        except json.JSONDecodeError:
-            return []
+            try:
+                auth_logger.info("Информация по счету")
+                list_trans = json.load(operations)
+                return list_trans
+            except json.JSONDecodeError:
+                list_trans = []
+                auth_logger.info("Информация по счету не удачно")
+                return list_trans
+    except FileNotFoundError:
+        list_trans = []
+        auth_logger.info("Файл поврежден")
+        return list_trans
+        # говорит о возрощений пипа list
+
+
+def get_transactions_dictionary_csv(csv_path: str) -> list[dict]:
+    """Aункция пути до CSV-файла и возвращает список словарей с данными о финансовых транзакциях"""
+
+    transaction_list = []
+    try:
+        with open(csv_path, encoding="utf-8") as csv_file:
+            reader = csv.reader(csv_file, delimiter=";")
+            next(reader)
+            for row in reader:
+                if row:
+                    id_, state, date, amount, currency_name, currency_code, from_, to, description = row
+                    transaction_list.append(
+                        {
+                            "id": str(id_),
+                            "state": state,
+                            "date": date,
+                            "operationAmount": {
+                                "amount": str(amount),
+                                "currency": {"name": currency_name, "code": currency_code},
+                            },
+                            "description": description,
+                            "from": from_,
+                            "to": to,
+                        }
+                    )
+    except Exception:
+        return []
+    return transaction_list
+
+
+def get_transactions_dictionary_excel(excel_path: str) -> list[dict]:
+    """FAункция пути до EXCEL-файла и возвращает список словарей с данными о финансовых транзакциях"""
+
+    transaction_list = []
+    try:
+        excel_data = pd.read_excel(excel_path)
+        len_, b = excel_data.shape
+        for i in range(len_):
+            if excel_data["id"][i]:
+                transaction_list.append(
+                    {
+                        "id": str(excel_data["id"][i]),
+                        "state": excel_data["state"][i],
+                        "date": excel_data["date"][i],
+                        "operationAmount": {
+                            "amount": str(excel_data["amount"][i]),
+                            "currency": {
+                                "name": excel_data["currency_name"][i],
+                                "code": excel_data["currency_code"][i],
+                            },
+                        },
+                        "description": excel_data["description"][i],
+                        "from": excel_data["from"][i],
+                        "to": excel_data["to"][i],
+                    }
+                )
+            else:
+                continue
+    except Exception:
+        return []
+    return transaction_list
 
 
